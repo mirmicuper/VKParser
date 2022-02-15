@@ -1,14 +1,19 @@
 import requests
 import csv
 import datetime, time
+import smtplib
+import os
 from bs4 import BeautifulSoup as BS
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
-
-#const
+# const
 token = 'abbf5a7cabbf5a7cabbf5a7cbeabc44283aabbfabbf5a7cca4700031cbc96ae8f1e2bdd'
 version = 5.131
 #Изменяемый параметр user_id
-user_id = 329743555 
+
+user_id = str(input("Введите ID: ")) #329743555 
+print("Expectation...")
 user_ids = '296213477'
 order = 'hints'
 fields ='sex, country, schools, bdate, last_seen, city, has_mobile'
@@ -21,7 +26,6 @@ response = requests.get('https://api.vk.com/method/friends.get', params={
 	'order':order
 	})
 data = response.json()['response']['items']
-print(data)
 #create theader in csv-file
 with open('data.csv', 'w') as file:
 	a_pen = csv.writer(file)
@@ -98,37 +102,60 @@ def getVariable(htmlp):
 	else:
 		sex = "Мужской"
 
-	print('ID: ' + str(idUser))
-	print('Имя: ' + str(first_name))
-	print('Фамилия: ' + str(last_name))
-	print('День Рождения: ' + str(bdate))
-	print('Пол: ' + str(sex))
-	print('Страна: ' + str(country))
-	print('Город: ' + str(city))
-	print('Онлайн: ' + str(value.strftime('%Y-%m-%d %H:%M:%S')))
-	print('Наличие телефона: ' + str(has_mobile))
-	print('**********************')
-	print()
 	getInfoInCSV(idUser, first_name, last_name, bdate, country, city)
 
 #general function (data about friends)
 def getInfo(data):
 	for i in data:
-		#write data about friend id
+	#write data about friend id
 		htmlp = requests.get('https://api.vk.com/method/users.get', params={
 			'access_token':token, 
 			'v':version, 
 			'user_ids': str(i),
 			'fields':fields
 			})
-		#try execute
-		try:
-			getVariable(htmlp)
-		except: 
-			print("Информация не найдена")
-			print('**********************')
-			print()
+		getVariable(htmlp)
+
+	print("\033[32m {}".format("Done"))
+
+	
+	# addr_from = "shatohinn267@gmail.com"                
+	# password  = "shatohin6701" 
+	# addr_to = "alexander.onthe@gmail.com"
+	# files = ["data.csv"]
+
+
+def send_email():
+	try:
+		addr_from = "shatohinn267@gmail.com"         
+		addr_to = "alexander.onthe@gmail.com"                     
+		password = "shatohin6701"                          
+
+		msg = MIMEMultipart()                              
+		msg['From'] = addr_from                        
+		msg['To'] = addr_to                             
+		msg['Subject'] = 'Тема сообщения'              
+
+		body = "Текст сообщения"
+		msg.attach(MIMEText(body, 'plain'))
+		with open('data.csv') as f:
+			file = MIMEText(f.read())
+
+		file.add_header('content-disposition', 'attachment', filename='data.csv')
+		msg.attach(file)
+
+	
+		server = smtplib.SMTP('smtp.gmail.com', 587)                              
+		server.starttls()                             
+		server.login(addr_from, password)             
+		server.send_message(msg)
+	
+		print("\033[32m {}".format("The message was sent successfully!"))
+
+	except Exception as _ex:
+		return f"{_ex}\nCheck your login or password please!"                         
 
 getInfo(data)
- 
+send_email()
+
 
