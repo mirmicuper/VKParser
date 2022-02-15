@@ -129,8 +129,8 @@ def getInfo(data):
 
 def send_email():
 	try:
-		addr_from = "shatohinn267@gmail.com"         
-		addr_to = "alexander.onthe@gmail.com"                     
+		addr_from = "shatohinn267@gmail.com"  
+		addr_to = str(input("send to: "))                
 		password = "shatohin6701"                          
 
 		msg = MIMEMultipart()                              
