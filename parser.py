@@ -43,53 +43,52 @@ def getVariable(htmlp):
 	try:
 		idUser = htmlp.json()['response'][0]['id']
 	except: 
-		print("ID: None")
+		idUser = "None"
 
 	try:
 		first_name = htmlp.json()['response'][0]['first_name']
 	except: 
-		print("Имя: None")
+		first_name = "None"
 
 	try:
 		last_name = htmlp.json()['response'][0]['last_name']
 	except: 
-		print("Фамилия: None")
+		last_name = "None"
 
 	try:
 		bdate = htmlp.json()['response'][0]['bdate']
 	except:
-		print("День Рождения: None")
+		bdate = "None"
 
 	try:
 		sex = htmlp.json()['response'][0]['sex']
 	except: 
-		print("Пол: None")
+		sex = "None"
 
 	try:
 		country = htmlp.json()['response'][0]['country']['title']
 	except: 
-		print("Страна: None")
+		country =  "None"
 
 	try:
 		city = htmlp.json()['response'][0]['city']['title']
 	except: 
-		print("Город: None")
+		city = "None"
 
 	try:
 		last_seen_platform = htmlp.json()['response'][0]['last_seen']['platform']
 	except: 
-		print("Устройство: None")
-
+		last_seen_time = "None"
 	try:
 		last_seen_time = htmlp.json()['response'][0]['last_seen']['time']
 		value = datetime.datetime.fromtimestamp(last_seen_time)
 	except: 
-		print("Онлайн: None")
+		value = "None"
 
 	try:
 		has_mobile = htmlp.json()['response'][0]['has_mobile']
 	except: 
-		print("Наличие телефона: None")
+		has_mobile = "None"
 
 
 	if has_mobile == 0:
@@ -114,7 +113,10 @@ def getInfo(data):
 			'user_ids': str(i),
 			'fields':fields
 			})
-		getVariable(htmlp)
+		try:
+			getVariable(htmlp)
+		except Exception as e:
+			raise e
 
 	print("\033[32m {}".format("Done"))
 
