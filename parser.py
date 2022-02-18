@@ -13,12 +13,11 @@ version = 5.131
 user_ids = '296213477'
 order = 'hints'
 fields ='sex, country, schools, bdate, last_seen, city, has_mobile'
-
+with open('data.csv', 'w') as fileq:
+	aq_pen = csv.writer(fileq)
+	aq_pen.writerow(['id', 'Имя', 'Фамилия', 'День Рождения', 'Страна', 'Город'])
 
 def getInfoInCSV(idUser, first_name, last_name, bdate, country, city):
-	with open('data.csv', 'w') as fileq:
-		aq_pen = csv.writer(fileq)
-		aq_pen.writerow(['id', 'Имя', 'Фамилия', 'День Рождения', 'Страна', 'Город'])
 
 	with open('data.csv', 'a') as file:
 		a_pen = csv.writer(file)
