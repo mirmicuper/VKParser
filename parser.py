@@ -1,5 +1,6 @@
 import requests
 import csv
+import collections
 import datetime, time
 import smtplib
 import os
@@ -18,7 +19,6 @@ with open('data.csv', 'w') as fileq:
 	aq_pen.writerow(['id', 'Имя', 'Фамилия', 'День Рождения', 'Страна', 'Город'])
 
 def getInfoInCSV(idUser, first_name, last_name, bdate, country, city):
-
 	with open('data.csv', 'a') as file:
 		a_pen = csv.writer(file)
 		my_list = [idUser, first_name, last_name, bdate, country, city]
@@ -95,7 +95,6 @@ def getInfo(user_id):
 			'user_ids': str(i),
 			'fields':fields
 			})
-		print(i)
 		try:
 			getVariable(htmlp)
 		except Exception as e:
@@ -161,11 +160,40 @@ def baner():
 	if command_terminal == "get info":
 		main()
 		return baner()
+	if command_terminal == "analis":
+		dataAnalisCity()
+		return baner
 	if command_terminal == "exit":
 		return
+
 
 def main():
 	user_link = input("link on user: ")
 	user_id = getID(user_link)
 	getInfo(user_id)
+
+def dataAnalis():
+	with open('data.csv', 'r') as f:
+		reader = csv.reader(f)
+		cities = []
+		container = collections.Counter()
+		for row in reader:
+			cities.append(row[5])
+		for cityCont in cities:
+			container[cityCont] += 1
+		container.pop('None') 
+		container.pop('Город')
+	return container
+
+def dataAnalisCity():
+	city_data = dataAnalis()
+	top_city = city_data.most_common(3)
+	print(top_city)
+	try:
+		print("Человек из города: " + str(top_city[0]))
+		print("Человек может быть связан с городами " + str(top_city[1]) + " и " + str(top_city[2]))
+	except: 
+		print("Мало городов")
+	
+# baner()
 baner()
