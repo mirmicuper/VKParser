@@ -2,8 +2,8 @@ import requests
 import csv
 import collections
 import datetime, time
+from datetime import date
 import smtplib
-import os
 from bs4 import BeautifulSoup as BS
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -14,9 +14,7 @@ version = 5.131
 user_ids = '296213477'
 order = 'hints'
 fields ='sex, country, schools, bdate, last_seen, city, has_mobile'
-with open('data.csv', 'w') as fileq:
-	aq_pen = csv.writer(fileq)
-	aq_pen.writerow(['id', 'Имя', 'Фамилия', 'День Рождения', 'Страна', 'Город'])
+
 
 def getInfoInCSV(idUser, first_name, last_name, bdate, country, city):
 	with open('data.csv', 'a') as file:
@@ -80,6 +78,7 @@ def getVariable(htmlp):
 	getInfoInCSV(idUser, first_name, last_name, bdate, country, city)
 
 def getInfo(user_id):
+	print(user_id)
 	response = requests.get('https://api.vk.com/method/friends.get', params={
 		'access_token':token, 
 		'v':version, 
@@ -100,7 +99,7 @@ def getInfo(user_id):
 		except Exception as e:
 			raise e
 
-	print("\033[32m {}".format("Done"))
+	print("Done")
 
 	
 	# addr_from = "shatohinn267@gmail.com"                
@@ -159,10 +158,11 @@ def baner():
 		return baner()
 	if command_terminal == "get info":
 		main()
-		return baner()
+		baner()
+		return 
 	if command_terminal == "analis":
 		dataAnalisCity()
-		return baner
+		return baner()
 	if command_terminal == "exit":
 		return
 
@@ -195,5 +195,27 @@ def dataAnalisCity():
 	except: 
 		print("Мало городов")
 	
+def dataAnalisCityForBot():
+	city_data = dataAnalis()
+	top_city = city_data.most_common(3)
+	print(top_city[0])
+	return top_city	
 # baner()
+def clickStart():
+	print("start")
 baner()
+def razd():
+	print("___________________")
+	printCurTime()
+def printCurTime():
+	current_date_time = datetime.datetime.now()
+	current_time = current_date_time.time()
+	current_date = printCurDate()
+	print(str(current_date) + " " + str(current_time))
+def printCurDate():
+	current_date = date.today()
+	return current_date
+def delInfoFromFile():
+	with open('data.csv', 'w') as fileq:
+		aq_pen = csv.writer(fileq)
+		aq_pen.writerow(['id', 'Имя', 'Фамилия', 'День Рождения', 'Страна', 'Город'])
